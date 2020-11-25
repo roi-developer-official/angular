@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Recipe } from '../recipe.model';
 
 @Component({
@@ -10,7 +10,12 @@ export class RecipeListComponent implements OnInit {
   recipes: Recipe[] = [
     new Recipe('A Test Recipe','a test','https://cdn.pixabay.com/photo/2016/06/15/19/09/food-1459693_960_720.jpg' )
   ];
+  @Output() recipeWasSelcted = new EventEmitter<Recipe>();
 
+  onRecipeSelcted(recipe:Recipe){
+    this.recipeWasSelcted.emit(recipe)
+  }
+  
   constructor() { }
 
   ngOnInit(): void {
