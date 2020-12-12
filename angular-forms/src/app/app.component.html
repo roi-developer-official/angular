@@ -1,0 +1,6 @@
+
+<button class="btn btn-primary m-3" (click)="changeApproach()">change approach</button>
+
+
+<app-templete-driving *ngIf="!approach"></app-templete-driving>
+<app-reactive-driving *ngIf="approach"></app-reactive-driving>
