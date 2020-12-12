@@ -1,0 +1,19 @@
+<div class="container">
+  <!-- binding to custom event -->
+  <app-cockpit (svCreated)="onServerAdded($event)"
+  (bpCreated)="onBlueprintAdded($event)"
+  ></app-cockpit>
+  <div class="row">
+    <div class="col-xs-12">
+      <button class="btn btnp=primary">Change first Element</button>
+      <!-- binding to custom property -> [element] : from the app component to the app-server-element  -->
+        <app-server-element [srvElement]="serverElement" *ngFor="let serverElement of serverElements">
+          <!-- by default this should be removed from the dom (everything between the component selector). but with ng-content directive in the server-element component this is working  -->
+          <p #contentParagraph>
+            <strong *ngIf="serverElement.type === 'server'" style="color: red">{{ serverElement.content }}</strong>
+            <em *ngIf="serverElement.type === 'blueprint'">{{ serverElement.content }}</em>
+          </p>
+        </app-server-element>
+    </div>
+  </div>
+</div>
