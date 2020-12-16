@@ -1,7 +1,8 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpEventType, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import Post from "src/post.model";
-import {map} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
+import {of, throwError} from 'rxjs'
 
 @Injectable({'providedIn': 'root'})
 export class PostService{
@@ -9,11 +10,20 @@ export class PostService{
     constructor(private http:HttpClient){}
     createAndStorePost(title:string,content:string){
         const postData:Post = { title , content }
-        return this.http.post<{name:string}>('https://angulat-http-12365-default-rtdb.firebaseio.com/posts.json', postData);
+        return this.http.post<{name:string}>('https://angulat-http-12365-default-rtdb.firebaseio.com/posts.json', postData,
+        {
+           // get the response, also 'body' to get the body of the req
+           observe: 'response'
+        });
+ 
     }
 
     fetchPosts(){
-       return this.http.get<{[key:string]: Post}>('https://angulat-http-12365-default-rtdb.firebaseio.com/posts.json')
+       return this.http.get<{[key:string]: Post}>('https://angulat-http-12365-default-rtdb.firebaseio.com/posts.json',
+       {
+          headers: new HttpHeaders({"Custon-Header": "hello"}),
+          params: new HttpParams().set('print', 'pretty')
+       })
         .pipe(map((resData)=>{
           const posts: Post[] = [];
           for(const key in resData){
@@ -21,12 +31,29 @@ export class PostService{
                posts.push({...resData[key], id: key})
           }
           return posts;
-        }));
+        }),
+        catchError(errorRes=>{
+           return throwError(errorRes)
+        })
+        );
     }
 
 
     deletePosts(){
-       return this.http.delete('https://angulat-http-12365-default-rtdb.firebaseio.com/posts.json');
+       return this.http.delete('https://angulat-http-12365-default-rtdb.firebaseio.com/posts.json',
+       {
+          observe : 'events',
+          responseType : 'text'
+       }
+       ).pipe(tap(event=>{
+          if(event.type === HttpEventType.Sent){
+
+          }
+          if(event.type === HttpEventType.Response){
+             console.log(event.body)
+          }
+      
+       }));
     }
 
 

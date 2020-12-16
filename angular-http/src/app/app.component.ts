@@ -18,7 +18,8 @@ export class AppComponent implements OnInit {
     this.isFetching = true;
     this.postService.fetchPosts()
       .subscribe(resData => {
-        this.loadedPosts = resData;
+
+        this.loadedPosts = resData
         this.isFetching = false
       },error=>{
         this.error = error.message
@@ -47,6 +48,10 @@ export class AppComponent implements OnInit {
 
   }
 
+  onHandleError(){
+    this.error = null;
+    this.isFetching = false;
+  }
 
   onClearPosts() {
     this.postService.deletePosts().subscribe(()=>{
