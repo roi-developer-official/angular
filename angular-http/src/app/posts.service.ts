@@ -10,7 +10,7 @@ export class PostService{
     constructor(private http:HttpClient){}
     createAndStorePost(title:string,content:string){
         const postData:Post = { title , content }
-        return this.http.post<{name:string}>('https://angulat-http-12365-default-rtdb.firebaseio.com/posts.json', postData,
+        return this.http.post<{name:string}>('', postData,
         {
            // get the response, also 'body' to get the body of the req
            observe: 'response'
@@ -19,7 +19,7 @@ export class PostService{
     }
 
     fetchPosts(){
-       return this.http.get<{[key:string]: Post}>('https://angulat-http-12365-default-rtdb.firebaseio.com/posts.json',
+       return this.http.get<{[key:string]: Post}>('',
        {
           headers: new HttpHeaders({"Custon-Header": "hello"}),
           params: new HttpParams().set('print', 'pretty')
@@ -40,7 +40,7 @@ export class PostService{
 
 
     deletePosts(){
-       return this.http.delete('https://angulat-http-12365-default-rtdb.firebaseio.com/posts.json',
+       return this.http.delete('',
        {
           observe : 'events',
           responseType : 'text'
